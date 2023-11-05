@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UploadActivity"
+    tools:context=".PhotoActivity"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingTop="32dp"
@@ -11,23 +11,14 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
-    <Button
-        android:id="@+id/manualBtn"
+    <TextView
+        android:id="@+id/photoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/lavender"
         android:gravity="center"
         android:layout_gravity="center"
-        android:text="Upload Manually">
-    </Button>
-    <Button
-        android:id="@+id/photoBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/lavender"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Upload with photo">
-    </Button>
+        android:text="Photo upload coming soon">
+    </TextView>
 
 </LinearLayout>
