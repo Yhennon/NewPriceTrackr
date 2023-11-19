@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ItemUploadActivity"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingTop="32dp"
+    android:paddingRight="16dp"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp">
+
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="left"
+        android:hint="Name">
+    </EditText>
+
+    <EditText
+        android:id="@+id/typeInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="left"
+        android:hint="Type">
+    </EditText>
+
+    <EditText
+        android:id="@+id/distributorInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="left"
+        android:hint="Distributor">
+    </EditText>
+
+    <EditText
+        android:id="@+id/priceInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="left"
+        android:hint="Price">
+    </EditText>
+
+    <Button
+        android:id="@+id/submitBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="right"
+        android:text="Submit">
+    </Button>
+
+</LinearLayout>
