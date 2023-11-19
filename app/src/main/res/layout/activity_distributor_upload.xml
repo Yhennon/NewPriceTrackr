@@ -11,14 +11,35 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
-    <TextView
-        android:id="@+id/photoText"
+    <EditText
+        android:id="@+id/titleInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="left"
+        android:hint="Title">
+    </EditText>
+
+    <EditText
+        android:id="@+id/addressInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="left"
+        android:hint="Address">
+    </EditText>
+
+    <Button
+        android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/lavender"
         android:gravity="center"
-        android:layout_gravity="center"
-        android:text="Distributor upload coming soon">
-    </TextView>
+        android:layout_gravity="right"
+        android:onClick="onSubmitBtnClick"
+        android:text="Submit">
+    </Button>
 
 </LinearLayout>
