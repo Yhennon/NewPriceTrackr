@@ -105,7 +105,7 @@ public class DistributorUploadActivity extends AppCompatActivity {
 
     //TODO: Maybe find a way to not hardcode this
     // also there might be a simpler way to do this...
-    public enum Distributor {
+    private enum Distributor {
         Rema("Rema 1000"),
         Netto("Netto"),
         IKEA("IKEA"),

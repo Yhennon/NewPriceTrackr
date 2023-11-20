@@ -21,25 +21,17 @@
         android:hint="Name">
     </EditText>
 
-    <EditText
+    <Spinner
         android:id="@+id/typeInput"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/lavender"
-        android:gravity="center"
-        android:layout_gravity="left"
-        android:hint="Type">
-    </EditText>
+        android:layout_height="wrap_content">
+    </Spinner>
 
-    <EditText
+    <Spinner
         android:id="@+id/distributorInput"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/lavender"
-        android:gravity="center"
-        android:layout_gravity="left"
-        android:hint="Distributor">
-    </EditText>
+        android:layout_height="wrap_content">
+    </Spinner>
 
     <EditText
         android:id="@+id/priceInput"
@@ -58,7 +50,19 @@
         android:backgroundTint="@color/lavender"
         android:gravity="center"
         android:layout_gravity="right"
+        android:onClick="onSubmitBtnClick"
         android:text="Submit">
+    </Button>
+
+    <Button
+        android:id="@+id/refreshBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="right"
+        android:onClick="onRefreshBtnClick"
+        android:text="Refresh">
     </Button>
 
 </LinearLayout>
