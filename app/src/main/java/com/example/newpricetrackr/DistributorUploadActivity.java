@@ -13,7 +13,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.VolleyError;
 
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -25,25 +27,32 @@ import java.util.Map;
 
 public class DistributorUploadActivity extends AppCompatActivity {
 
-    private EditText titleInput;
+    private Spinner titleInput;
     private EditText addressInput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_distributor_upload);
 
-        titleInput = findViewById(R.id.titleInput);
         addressInput = findViewById(R.id.addressInput);
+
+        //Fill out the dropdown list
+        ArrayAdapter<Distributor> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Distributor.values());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        titleInput = findViewById(R.id.titleInput);
+        titleInput.setAdapter(adapter);
     }
 
     public void onSubmitBtnClick(View view)
     {
-        String title = titleInput.getText().toString().trim();
+        Distributor selectedValue = (Distributor) titleInput.getSelectedItem();
+        String title = selectedValue.toString();
+
         String address = addressInput.getText().toString().trim();
-        if (title.isEmpty() || address.isEmpty()) {
-            showToast("Title and address cannot be empty");
+        if (address.isEmpty()) {
+            showToast("Address cannot be empty");
         } else {
-            //TODO:make title enum
             uploadDistributor(title, address);
         }
     }
@@ -92,5 +101,27 @@ public class DistributorUploadActivity extends AppCompatActivity {
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    //TODO: Maybe find a way to not hardcode this
+    // also there might be a simpler way to do this...
+    public enum Distributor {
+        Rema("Rema 1000"),
+        Netto("Netto"),
+        IKEA("IKEA"),
+        Bilka("Bilka"),
+
+        //TODO: Change the enum to capital f for the API
+        Fotex("føtex")
+        ;
+
+        private final String text;
+        Distributor(final String text) {
+            this.text = text;
+        }
+        @Override
+        public String toString() {
+            return text;
+        }
     }
 }

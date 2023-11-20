@@ -11,15 +11,11 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
-    <EditText
+    <Spinner
         android:id="@+id/titleInput"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/lavender"
-        android:gravity="center"
-        android:layout_gravity="left"
-        android:hint="Title">
-    </EditText>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
 
     <EditText
         android:id="@+id/addressInput"
