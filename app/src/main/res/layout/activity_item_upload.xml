@@ -54,15 +54,4 @@
         android:text="Submit">
     </Button>
 
-    <Button
-        android:id="@+id/refreshBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/lavender"
-        android:gravity="center"
-        android:layout_gravity="right"
-        android:onClick="onRefreshBtnClick"
-        android:text="Refresh">
-    </Button>
-
 </LinearLayout>

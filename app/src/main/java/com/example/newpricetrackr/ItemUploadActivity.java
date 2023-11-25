@@ -31,20 +31,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ItemUploadActivity extends AppCompatActivity {
-
+    Context context = this;
     private EditText nameInput;
     private Spinner typeInput;
     private Spinner distributorInput;
     private EditText priceInput;
-
     DistributorsManager distributorsManager = new DistributorsManager();
-
     ArrayAdapter<String> distributorAdapter;
     ArrayAdapter<ItemType> typeAdapter;
     private ArrayList<ModelsClass.Distributor> distributorList = new ArrayList<>();
-    private ArrayList<String> formattedDistributorList = new ArrayList<>();
+    private HashMap<String, String> formattedDistributorList = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +54,12 @@ public class ItemUploadActivity extends AppCompatActivity {
         priceInput = findViewById(R.id.priceInput);
 
         //Fill out the dropdown lists
-        distributorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, formattedDistributorList);
-        distributorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        distributorsManager.getDistributors(distributorList,new DistributorsCallback() {
-            @Override
-            public void onDistributorsReceived(ArrayList<ModelsClass.Distributor> distributorList) {
-                formattedDistributorList = distributorsManager.formatDistributorList(distributorList);
-                distributorAdapter.notifyDataSetChanged();
-            }
-        });
-
+        //distributorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, formattedDistributorList);
+        //distributorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         distributorInput = findViewById(R.id.distributorInput);
-        distributorInput.setAdapter(distributorAdapter);
+        distributorsManager.getDistributors(distributorList,formattedDistributorList);
+
+
 
 
         typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ItemType.values());
@@ -78,11 +71,12 @@ public class ItemUploadActivity extends AppCompatActivity {
     }
 
     public void onSubmitBtnClick(View view) {
-        ItemType selectedValue = (ItemType) typeInput.getSelectedItem();
-        String type = selectedValue.toString();
+        ItemType selectedType = (ItemType) typeInput.getSelectedItem();
+        String type = selectedType.toString();
 
-        //TODO: Get Dist.
-        int distributorID = 1;
+        String selectedDistributor = (String) distributorInput.getSelectedItem();
+        int distributorID = Integer.parseInt(formattedDistributorList.get(selectedDistributor));
+
 
         String name = nameInput.getText().toString().trim();
         //TODO: Force numeric values
@@ -90,19 +84,11 @@ public class ItemUploadActivity extends AppCompatActivity {
         if (name.isEmpty() || price.isEmpty()) {
             showToast("Name and price cannot be empty");
         } else {
-            uploadItem(name, distributorID, type, price);
+            uploadItem(name, distributorID, type, Integer.parseInt(price));
         }
     }
-    public void onRefreshBtnClick(View view) {
-        formattedDistributorList = distributorsManager.formatDistributorList(distributorList);
-        distributorAdapter.notifyDataSetChanged();
-        distributorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, formattedDistributorList);
-        distributorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        distributorInput = findViewById(R.id.distributorInput);
-        distributorInput.setAdapter(distributorAdapter);
-    }
 
-    private void uploadItem(String name, int distributorID, String type, String price) {
+    private void uploadItem(String name, int distributorID, String type, int price) {
         String url = "http://10.0.2.2:8000/distributors/" + distributorID + "/items/";
         RequestQueue requestQueue = Volley.newRequestQueue(ItemUploadActivity.this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -115,7 +101,7 @@ public class ItemUploadActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley Error", "Error: " + error.toString());
+                        Log.e("Volley Error", "Error: " + error.getMessage());
                         //TODO: make this more descriptive
                         showToast("Something went wrong");
                     }
@@ -126,8 +112,9 @@ public class ItemUploadActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonBody = new JSONObject();
                     jsonBody.put("name", name);
-                    jsonBody.put("itemType", type);
+                    jsonBody.put("itemtype", type);
                     jsonBody.put("price", price);
+                    Log.e("Volley Error", jsonBody.toString());
                     return jsonBody.toString().getBytes("utf-8");
                 } catch (JSONException | UnsupportedEncodingException e) {
                     Log.e("Error", "Error: " + e.getMessage());
@@ -142,6 +129,7 @@ public class ItemUploadActivity extends AppCompatActivity {
                 return headers;
             }
         };
+
 
         requestQueue.add(stringRequest);
     }
@@ -169,12 +157,8 @@ public class ItemUploadActivity extends AppCompatActivity {
             return text;
         }
     }
-
-    public interface DistributorsCallback {
-        void onDistributorsReceived(ArrayList<ModelsClass.Distributor> distributorList);
-    }
     public class DistributorsManager {
-        private void getDistributors(ArrayList<ModelsClass.Distributor> distributorList, final DistributorsCallback callback) {
+        private void getDistributors(ArrayList<ModelsClass.Distributor> distributorList, HashMap<String, String> formattedList) {
             String url = "http://10.0.2.2:8000/distributors/";
 
             RequestQueue requestQueue = Volley.newRequestQueue(ItemUploadActivity.this);
@@ -190,18 +174,24 @@ public class ItemUploadActivity extends AppCompatActivity {
                 List<ModelsClass.Distributor> listOfDistributors = gson.fromJson(response, distributorType);
 
                 distributorList.clear();
+                formattedList.clear();
                 for (ModelsClass.Distributor distributor : listOfDistributors) {
                     distributorList.add(distributor);
-                    Log.e("ItemUploadActivity", "Dist ");
+                    formattedList.put(distributor.getTitle() + ", " + distributor.getAddress(),String.valueOf(distributor.getId()));
+
                 }
+                Set<String> distributors = formattedList.keySet();
+                List<String> distributorsList = new ArrayList<>(distributors);
+                Log.e("Error", distributorsList.get(0));
+                ArrayAdapter<String> distributorAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, distributorsList);
+                distributorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                distributorInput.setAdapter(distributorAdapter);
 
             }, error -> Log.e("ItemUploadActivity", "populateItems: Error occured: " + error.getMessage()));
 
 
             // Add the request to the queue
             requestQueue.add(stringRequest);
-
-            callback.onDistributorsReceived(distributorList);
         }
 
         private ArrayList<String> formatDistributorList(ArrayList<ModelsClass.Distributor> distributorList)
