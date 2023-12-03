@@ -7,17 +7,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BrowseActivity extends AppCompatActivity {
@@ -41,28 +46,126 @@ public class BrowseActivity extends AppCompatActivity {
         browseListView.setAdapter(arrayAdapter);
     }
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.actionbar_menu,menu);
+//        MenuItem menuItem = menu.findItem(R.id.search);
+//        SearchView searchView = (SearchView) menuItem.getActionView();
+//        searchView.setQueryHint("Search here");
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                arrayAdapter.getFilter().filter(newText);
+//                return false;
+//            }
+//        });
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionbar_menu,menu);
-        MenuItem menuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
+        getMenuInflater().inflate(R.menu.actionbar_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint("Search here");
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+        MenuItem sortItem = menu.add(Menu.NONE, R.id.sort, Menu.NONE, "Sort");
+        sortItem.setIcon(android.R.drawable.ic_menu_sort_by_size);
+        sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                arrayAdapter.getFilter().filter(newText);
-                return false;
-            }
+        sortItem.setOnMenuItemClickListener(item -> {
+            showSortOptions(); // Method to display sort options
+            return true;
         });
 
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
+
+    private void showSortOptions() {
+        View view = findViewById(R.id.sort); // Adjust the ID according to your layout
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.getMenuInflater().inflate(R.menu.sort_menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.sort_price_asc) {
+                // Call method to fetch items in ascending order of price
+                fetchItemsSortedByPrice(true);
+                return true;
+            } else if (itemId == R.id.sort_price_desc) {
+                // Call method to fetch items in descending order of price
+                fetchItemsSortedByPrice(false);
+                return true;
+            }
+            return false;
+        });
+
+        popupMenu.show();
+    }
+
+
+//    private void fetchItemsSortedByPrice(boolean ascending) {
+//        String sortOrder = ascending ? "True" : "False";
+//        String url = "http://10.0.2.2:8000/items?sort=" + sortOrder;
+//
+//        // Rest of your network request code to fetch items based on the provided URL
+//        // Use Volley or any other method to make the network request
+//        // Update itemList and notify the adapter after fetching the sorted items
+//
+//
+//    }
+
+    private void fetchItemsSortedByPrice(boolean ascending) {
+        String sortOrder = ascending ? "True" : "False";
+        String url = "http://10.0.2.2:8000/items?sort=" + sortOrder;
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Handle successful response and update itemList
+                        try {
+                            Gson gson = new Gson();
+                            List<ModelsClass.Item> listOfItems = gson.fromJson(response, new TypeToken<List<ModelsClass.Item>>(){}.getType());
+
+                            itemList.clear();
+                            for (ModelsClass.Item item : listOfItems) {
+                                String name = item.getName();
+                                double price = item.getPrice();
+
+                                String itemInfo = name + ", " + price + " dkk";
+                                itemList.add(itemInfo);
+                            }
+
+                            arrayAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing response: " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error
+                        Log.e(TAG, "Error fetching items: " + error.toString());
+                    }
+                }
+        );
+
+        requestQueue.add(stringRequest);
+    }
+
+
 
     private void populateItems(ArrayList<String> itemList) {
         String url = "http://10.0.2.2:8000/items/";
@@ -78,36 +181,21 @@ public class BrowseActivity extends AppCompatActivity {
 
             List<ModelsClass.Item> listOfItems = gson.fromJson(response, itemType);
 
-            // Log.d(TAG, "populateItems: listofItems:" +listOfItems);
-
+            // Sort the list based on price in descending order
+            Collections.sort(listOfItems, (item1, item2) -> Double.compare(item2.getPrice(), item1.getPrice()));
 
             itemList.clear();
             for (ModelsClass.Item item : listOfItems){
                 String name = item.getName();
-                String itemtype = item.getItemtype();
                 double price = item.getPrice();
-                int id = item.getId();
-                int distributor_id = item.getDistributor_id();
 
-                itemList.add(name);
-               // Log.d(TAG, "populateItems: "+ name + itemtype);
-
+                String itemInfo = name + ", " + price + " dkk";
+                itemList.add(itemInfo);
             }
-            /*
-            * The populateItems method makes an asynchronous network request, and the ListView is being set up in the onCreate method.
-            * Since the network request is asynchronous, it might not have completed by the time the ListView is being set up in onCreate.
-            * As a result, the ListView is initially empty.
-            *
-            * To ensure that the ListView is updated with the data after it's retrieved, you should notify the ArrayAdapter of changes
-            * to the underlying data (in this case, the itemList) once the data is available.
-            * You can do this by calling notifyDataSetChanged() on the adapter after adding items to the list.
-            * */
+
             arrayAdapter.notifyDataSetChanged();
+        }, error -> Log.e(TAG, "populateItems: Error occurred: " + error.getMessage()));
 
-        }, error -> Log.e(TAG, "populateItems: Error occured: " +error.getMessage()));
-
-
-        // Add the request to the queue
         requestQueue.add(stringRequest);
     }
 }
