@@ -82,14 +82,85 @@ public class BrowseActivity extends AppCompatActivity {
         sortItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         sortItem.setOnMenuItemClickListener(item -> {
-            showSortOptions(); // Method to display sort options
+            showSortOptions2(); // Method to display sort options
             return true;
         });
 
         return true;
     }
+//
+//    private void showSortOptions() {
+//        View view = findViewById(R.id.sort); // Adjust the ID according to your layout
+//        PopupMenu popupMenu = new PopupMenu(this, view);
+//        popupMenu.getMenuInflater().inflate(R.menu.sort_menu, popupMenu.getMenu());
+//
+//        popupMenu.setOnMenuItemClickListener(item -> {
+//            int itemId = item.getItemId();
+//            if (itemId == R.id.sort_price_asc) {
+//                // Call method to fetch items in ascending order of price
+//                fetchItemsSortedByPrice(true);
+//                return true;
+//            } else if (itemId == R.id.sort_price_desc) {
+//                // Call method to fetch items in descending order of price
+//                fetchItemsSortedByPrice(false);
+//                return true;
+//            } else if (itemId == R.id.sort_name_asc){
+//                fetchItemsSortedByName(true);
+//                return true;
+//            } else if (itemId == R.id.sort_name_asc) {
+//                fetchItemsSortedByName(false);
+//                return true;
+//            }
+//                return false;
+//        });
+//
+//        popupMenu.show();
+//    }
+//
+//    private void fetchItemsSortedByName(boolean ascending,) {
+//        String sortOrder = ascending ? "True" : "False";
+//        String url = "http://10.0.2.2:8000/items?sort=" + sortOrder;
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        // Handle successful response and update itemList
+//                        try {
+//                            Gson gson = new Gson();
+//                            List<ModelsClass.Item> listOfItems = gson.fromJson(response, new TypeToken<List<ModelsClass.Item>>(){}.getType());
+//
+//                            itemList.clear();
+//                            for (ModelsClass.Item item : listOfItems) {
+//                                String name = item.getName();
+//                                double price = item.getPrice();
+//
+//                                String itemInfo = name + ", " + price + " dkk";
+//                                itemList.add(itemInfo);
+//                            }
+//
+//                            arrayAdapter.notifyDataSetChanged();
+//                        } catch (Exception e) {
+//                            Log.e(TAG, "Error parsing response: " + e.getMessage());
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        // Handle error
+//                        Log.e(TAG, "Error fetching items: " + error.toString());
+//                    }
+//                }
+//        );
+//
+//        requestQueue.add(stringRequest);
+//    }
 
-    private void showSortOptions() {
+
+    private void showSortOptions2() {
         View view = findViewById(R.id.sort); // Adjust the ID according to your layout
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.getMenuInflater().inflate(R.menu.sort_menu, popupMenu.getMenu());
@@ -98,11 +169,17 @@ public class BrowseActivity extends AppCompatActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.sort_price_asc) {
                 // Call method to fetch items in ascending order of price
-                fetchItemsSortedByPrice(true);
+                fetchItemsSorted("asc", "");
                 return true;
             } else if (itemId == R.id.sort_price_desc) {
                 // Call method to fetch items in descending order of price
-                fetchItemsSortedByPrice(false);
+                fetchItemsSorted("desc","");
+                return true;
+            } else if (itemId == R.id.sort_name_asc){
+                fetchItemsSorted("","asc");
+                return true;
+            } else if (itemId == R.id.sort_name_asc) {
+                fetchItemsSorted("","desc");
                 return true;
             }
             return false;
@@ -112,21 +189,17 @@ public class BrowseActivity extends AppCompatActivity {
     }
 
 
-//    private void fetchItemsSortedByPrice(boolean ascending) {
-//        String sortOrder = ascending ? "True" : "False";
-//        String url = "http://10.0.2.2:8000/items?sort=" + sortOrder;
-//
-//        // Rest of your network request code to fetch items based on the provided URL
-//        // Use Volley or any other method to make the network request
-//        // Update itemList and notify the adapter after fetching the sorted items
-//
-//
-//    }
+    private void fetchItemsSorted(String price, String name) {
+        String priceOrder = "&price_sort="+ price;
+        String nameOrder = "&name_sort=" +name;
 
-    private void fetchItemsSortedByPrice(boolean ascending) {
-        String sortOrder = ascending ? "True" : "False";
-        String url = "http://10.0.2.2:8000/items?sort=" + sortOrder;
+        if (name == "") {
+            nameOrder = "";
+        }
 
+        String url = "http://10.0.2.2:8000/items-sorted?sort=True"+priceOrder+nameOrder;
+
+        Log.d(TAG, "fetchItemsSorted: " + url);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
