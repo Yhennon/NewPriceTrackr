@@ -7,14 +7,8 @@
         android:title="Price Descending" />
     <item
         android:id="@+id/sort_name_asc"
-        android:title="Price Ascending" />
+        android:title="Name Ascending" />
     <item
         android:id="@+id/sort_name_desc"
-        android:title="Price Descending" />
-    <item
-        android:id="@+id/sort_itemtype_asc"
-        android:title="Price Ascending" />
-    <item
-        android:id="@+id/sort_itemtype_desc"
-        android:title="Price Descending" />
+        android:title="Name Descending" />
 </menu>
