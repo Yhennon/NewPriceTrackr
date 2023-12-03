@@ -26,7 +26,6 @@ public class BrowseActivity extends AppCompatActivity {
     ListView browseListView;
     ArrayAdapter<String> arrayAdapter;
 
-
     //change this to be of type Item maybe
     ArrayList<String> itemList = new ArrayList<>();
 
