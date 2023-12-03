@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ManualActivity"
+    tools:context=".PhotoActivity"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingTop="32dp"
@@ -11,23 +11,31 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
+    <Spinner
+        android:id="@+id/titleInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
+
+    <EditText
+        android:id="@+id/addressInput"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/lavender"
+        android:gravity="center"
+        android:layout_gravity="left"
+        android:hint="Address">
+    </EditText>
+
     <Button
-        android:id="@+id/uploadItemBtn"
+        android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/lavender"
         android:gravity="center"
-        android:layout_gravity="center"
-        android:text="Upload Item">
-    </Button>
-    <Button
-        android:id="@+id/uploadDistributorBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/lavender"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Upload Distributor">
+        android:layout_gravity="right"
+        android:onClick="onSubmitBtnClick"
+        android:text="Submit">
     </Button>
 
 </LinearLayout>
