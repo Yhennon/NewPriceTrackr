@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/sort"
+        android:title="Sort"
+        android:icon="@drawable/baseline_filter_list_24"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
         android:id="@+id/search"
         android:title="Search"
         android:icon="@drawable/baseline_search_24"
