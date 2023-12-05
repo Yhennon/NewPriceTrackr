@@ -31,8 +31,6 @@ public class BrowseActivity extends AppCompatActivity {
 
     ListView browseListView;
     ArrayAdapter<String> arrayAdapter;
-
-    //change this to be of type Item maybe
     ArrayList<String> itemList = new ArrayList<>();
 
 
@@ -45,26 +43,6 @@ public class BrowseActivity extends AppCompatActivity {
         browseListView = findViewById(R.id.browseListView);
         arrayAdapter = new ArrayAdapter<>(this,R.layout.list_customtext, itemList);
         browseListView.setAdapter(arrayAdapter);
-
-//        browseListView.setOnItemClickListener((parent, view, position, id) -> {
-//
-//            String selectedItem = itemList.get(position);
-//
-//            String[] itemDetails = selectedItem.split(", ");
-//
-//            // Create an Intent to start the ItemDetailsActivity
-//            Intent intent = new Intent(BrowseActivity.this, ItemDetailsActivity.class);
-//
-//            // Pass necessary data to the ItemDetailsActivity using intent extras
-//            intent.putExtra("itemName", itemDetails[0]);
-//            intent.putExtra("itemPrice", Double.parseDouble(itemDetails[1].replace(" dkk", "")));
-//
-//            intent.putExtra("type", intent.getStringExtra("type"));
-//            intent.putExtra("distributorID", intent.getStringExtra("distributorID"));
-//
-//            startActivity(intent);
-//        });
-
     }
 
     @Override
@@ -95,11 +73,9 @@ public class BrowseActivity extends AppCompatActivity {
         popupMenu.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.sort_price_asc) {
-                // Call method to fetch items in ascending order of price
                 fetchItemsSorted("asc", "");
                 return true;
             } else if (itemId == R.id.sort_price_desc) {
-                // Call method to fetch items in descending order of price
                 fetchItemsSorted("desc","");
                 return true;
             } else if (itemId == R.id.sort_name_asc){
@@ -149,7 +125,6 @@ public class BrowseActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Handle successful response and update itemList
                         try {
                             Gson gson = new Gson();
                             List<ModelsClass.Item> listOfItems = gson.fromJson(response, new TypeToken<List<ModelsClass.Item>>(){}.getType());
