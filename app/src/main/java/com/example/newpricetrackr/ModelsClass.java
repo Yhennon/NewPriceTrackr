@@ -117,5 +117,16 @@ public class ModelsClass {
         }
     }
 
+    public static class ItemTypeModel {
+        private String name;
+
+        public ItemTypeModel(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 
 }

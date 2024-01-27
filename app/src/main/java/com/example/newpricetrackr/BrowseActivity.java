@@ -112,10 +112,6 @@ public class BrowseActivity extends AppCompatActivity {
             priceOrder = "";
         }
 
-//        if (itemtype == ""){
-//            typeOrder = "";
-//        }
-
         String url = "http://10.0.2.2:8000/items-sorted?sort=True"+priceOrder+nameOrder;
 
         Log.d(TAG, "fetchItemsSorted: " + url);
@@ -201,62 +197,4 @@ public class BrowseActivity extends AppCompatActivity {
 
         requestQueue.add(stringRequest);
     }
-
-
-
-//    private void populateItems(ArrayList<String> itemList) {
-//        String url = "http://10.0.2.2:8000/items/";
-//
-//        RequestQueue requestQueue = Volley.newRequestQueue(BrowseActivity.this);
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
-//            Log.d(TAG, "populateItems: " + response);
-//
-//            Gson gson = new Gson();
-//
-//            java.lang.reflect.Type itemType = new TypeToken<List<ModelsClass.Item>>() {}.getType();
-//
-//            List<ModelsClass.Item> listOfItems = gson.fromJson(response, itemType);
-//
-//            // Sort the list based on price in descending order
-//            Collections.sort(listOfItems, (item1, item2) -> Double.compare(item2.getPrice(), item1.getPrice()));
-//
-//            itemList.clear();
-//            for (ModelsClass.Item item : listOfItems){
-//                String name = item.getName();
-//                double price = item.getPrice();
-//                String type = item.getItemtype();
-//                String distributorID = String.valueOf(item.getDistributor_id());
-//
-//                String itemInfo = name + ", " + price + " dkk";
-//                itemList.add(itemInfo);
-//
-//                browseListView.setOnItemClickListener((parent, view, position, id) -> {
-//                    // Retrieve the clicked item
-//                    String selectedItem = itemList.get(position);
-//
-//                    // Split the item info to get individual details (name, price, etc.)
-//                    String[] itemDetails = selectedItem.split(", ");
-//
-//                    // Create an Intent to start the ItemDetailsActivity
-//                    Intent intent = new Intent(BrowseActivity.this, ItemDetailsActivity.class);
-//
-//                    // Pass necessary data to the ItemDetailsActivity using intent extras
-//                    intent.putExtra("itemName", itemDetails[0]);
-//                    intent.putExtra("itemPrice", Double.parseDouble(itemDetails[1].replace(" dkk", "")));
-//
-//                    // Pass additional attributes directly from the loop
-//                    intent.putExtra("type", type);
-//                    intent.putExtra("distributorID", distributorID);
-//
-//                    startActivity(intent);
-//                });
-//
-//            }
-//
-//            arrayAdapter.notifyDataSetChanged();
-//        }, error -> Log.e(TAG, "populateItems: Error occurred: " + error.getMessage()));
-//
-//        requestQueue.add(stringRequest);
-//    }
 }

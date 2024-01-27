@@ -83,26 +83,5 @@ public class ItemDetailsActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-//    private String getDistributorInfo(String distributorID) {
-//        String url = "http://10.0.2.2:8000/items/"+distributorID;
-//
-//        RequestQueue requestQueue = Volley.newRequestQueue(ItemDetailsActivity.this);
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
-//
-//            Gson gson = new Gson();
-//            java.lang.reflect.Type distributorBaseType = new TypeToken<List<ModelsClass.DistributorBase>>() {}.getType();
-//
-//            ModelsClass.DistributorBase distributorBase = gson.fromJson(response, distributorBaseType);
-//
-//            String title = distributorBase.getTitle();
-//            String address = distributorBase.getAddress();
-//
-//            String distributor = title + ", " +address;
-//            Log.d(TAG, "getDistributorInfo: distributor = "+distributor);
-//
-//        }, error -> Log.e(TAG, "getDistributorInfo: Error occurred: " + error.getMessage()));
-//
-//        requestQueue.add(stringRequest);
-//    }
+
 }
