@@ -35,11 +35,12 @@ public class ItemUploadActivity extends AppCompatActivity {
     private Spinner typeInput;
     private Spinner distributorInput;
     private EditText priceInput;
-
     ArrayAdapter<String> distributorAdapter;
-    ArrayAdapter<ItemType> typeAdapter;
+    ArrayAdapter<String> typeAdapter;
+
 
     private HashMap<String, String> distributorList = new HashMap<String, String>();
+    private List<String> itemTypeList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +52,17 @@ public class ItemUploadActivity extends AppCompatActivity {
         distributorInput = findViewById(R.id.distributorInput);
         typeInput = findViewById(R.id.typeInput);
 
-
         getDistributors(distributorList);
+        getTypes(itemTypeList);
 
-        typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ItemType.values());
+        typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, itemTypeList);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeInput.setAdapter(typeAdapter);
-
     }
 
+
     public void onSubmitBtnClick(View view) {
-        ItemType selectedType = (ItemType) typeInput.getSelectedItem();
-        String type = selectedType.toString();
+        String type = (String) typeInput.getSelectedItem();
 
         String selectedDistributor = (String) distributorInput.getSelectedItem();
         int distributorID = Integer.parseInt(distributorList.get(selectedDistributor));
@@ -156,23 +156,38 @@ public class ItemUploadActivity extends AppCompatActivity {
         // Add the request to the queue
         requestQueue.add(stringRequest);
     }
+
+    private void getTypes(List<String> itemTypes) {
+        String url = "http://10.0.2.2:8000/itemtypes/";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(ItemUploadActivity.this);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
+            Log.d("ItemUploadActivity", "getTypes: " + response);
+
+            Gson gson = new Gson();
+
+            java.lang.reflect.Type itemTypeType = new TypeToken<List<String>>() {}.getType();
+            List<String> listOfItemTypes = gson.fromJson(response, itemTypeType);
+
+            itemTypes.clear();
+            for (String itemType : listOfItemTypes) {
+                itemTypes.add(new ModelsClass.ItemTypeModel(itemType).getName());
+            }
+
+            // Update the Spinner Adapter
+            typeAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, itemTypes);
+            typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            typeInput.setAdapter(typeAdapter);
+
+        }, error -> Log.e("ItemUploadActivity", "getTypes: Error occurred: " + error.getMessage()));
+
+        // Add the request to the queue
+        requestQueue.add(stringRequest);
+    }
+
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-    private enum ItemType {
-        Bakery("Bakery product"),
-        Dairy("Dairy"),
-        Spice("Spice"),
-        Fruit("Fruit and vegetable"),
-        Meat("Meat");
 
-        private final String text;
-        ItemType(final String text) {
-            this.text = text;
-        }
-        @Override
-        public String toString() {
-            return text;
-        }
-    }
 }

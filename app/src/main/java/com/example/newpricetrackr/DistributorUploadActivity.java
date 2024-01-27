@@ -103,7 +103,6 @@ public class DistributorUploadActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    //TODO: Maybe find a way to not hardcode this
     // also there might be a simpler way to do this...
     private enum Distributor {
         Rema("Rema 1000"),
